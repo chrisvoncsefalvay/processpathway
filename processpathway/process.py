@@ -64,19 +64,19 @@ class FPS:
         Imprints the frame rate on the image in the pipeline.
 
         :param image_matrix_object: image matrix object in the pipeline
-        :type image_matrix_object:
-        :param font_face:
-        :type font_face:
-        :param font_scale:
-        :type font_scale:
-        :param color:
-        :type color:
-        :param thickness:
-        :type thickness:
-        :param origin:
-        :type origin:
-        :return:
-        :rtype:
+        :type image_matrix_object: numpy.ndarray
+        :param font_face: Font face
+        :type font_face: int
+        :param font_scale: Font scale
+        :type font_scale: float
+        :param color: color
+        :type color: tuple
+        :param thickness: thickness
+        :type thickness: float
+        :param origin: origin
+        :type origin: tuple
+        :return: image with the FPS imprinted
+        :rtype: numpy.ndarray
         """
 
         cv2.putText(img=image_matrix_object,
