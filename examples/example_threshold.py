@@ -1,15 +1,23 @@
 # coding=utf-8
 
-# 
-# (c) Chris von Csefalvay, 2015.
-
+#
+# (c) Chris von Csefalvay, 2016.
+# <chris@chrisvoncsefalvay.com>
+#
+# http://www.chrisvoncsefalvay.com
+# http://www.helioserv.com
+#
+# Licensed under the MIT License (https://opensource.org/licenses/MIT).
+#
 """
 example_threshold is a brief example of processpathway that demonstrates the power of live processing: a whole
 processing pipeline, with display functionality and other goodies, including threading, can be written in a few lines.
 """
 
 import cv2
+
 from processpathway.processpathway.process import LiveProcess
+
 
 def convert_to_grayscale(_frame):
     _frame = cv2.cvtColor(_frame, cv2.COLOR_BGR2GRAY)

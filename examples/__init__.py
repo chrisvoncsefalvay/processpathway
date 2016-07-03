@@ -1,8 +1,11 @@
 # coding=utf-8
 
-# 
-# (c) Chris von Csefalvay, 2015.
-
-"""
-__init__.py is responsible for [brief description here].
-"""
+#
+# (c) Chris von Csefalvay, 2016.
+# <chris@chrisvoncsefalvay.com>
+#
+# http://www.chrisvoncsefalvay.com
+# http://www.helioserv.com
+#
+# Licensed under the MIT License (https://opensource.org/licenses/MIT).
+#

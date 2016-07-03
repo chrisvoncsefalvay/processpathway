@@ -1,9 +1,14 @@
 # coding=utf-8
 
-# 
-# (c) Chris von Csefalvay, 2016.
 #
-
+# (c) Chris von Csefalvay, 2016.
+# <chris@chrisvoncsefalvay.com>
+#
+# http://www.chrisvoncsefalvay.com
+# http://www.helioserv.com
+#
+# Licensed under the MIT License (https://opensource.org/licenses/MIT).
+#
 """
 processpathway is a simple image processing framework for live computer vision applications supporting primarily one
 functionality: displaying a live transformation (or several) of a video camera (webcam) input.
