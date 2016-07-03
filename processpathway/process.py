@@ -17,12 +17,14 @@ The model of processpathway is a four-step process:
 """
 
 import collections
-import cv2
-import time
 import datetime
-from imutils.video import WebcamVideoStream
 import logging
+import os
 import sys
+import time
+
+import cv2
+from imutils.video import WebcamVideoStream
 
 
 class FPS:
@@ -97,8 +99,9 @@ class LiveProcess:
                  fh_log_level=logging.DEBUG,
                  warmup=1.0,
                  source_device_id=0,
-                 screencap=False,
-                 fps=True):
+                 screencap=True,
+                 fps=True,
+                 outputformat="png"):
         """
         Initialises a LiveProcessor that pipes a webcam image through a processing function and displays it.
 
@@ -120,6 +123,8 @@ class LiveProcess:
         :type screencap: bool
         :param fps: whether to show FPS
         :type fps: bool
+        :param outputformat: output file format
+        :type outputformat: str
         """
         self.vs = None
         self.process = process or collections.OrderedDict()
@@ -130,6 +135,7 @@ class LiveProcess:
         self.fps = fps
         self.lastframetime = datetime.datetime.now()
         self.frame = None
+        self.outputformat = outputformat
 
         if self.fps:
             self.fps_counter = FPS()
@@ -141,7 +147,7 @@ class LiveProcess:
             ch = logging.StreamHandler()
             fh.setLevel(fh_log_level)
             ch.setLevel(ch_log_level)
-            formatter = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s: %(message)s")
+            formatter = logging.Formatter(u"%(asctime)s | %(name)s | %(levelname)s: %(message)s")
             fh.setFormatter(formatter)
             ch.setFormatter(formatter)
             logger.addHandler(fh)
@@ -177,23 +183,23 @@ class LiveProcess:
             else:
                 process = args[0]
 
-            self.logger.debug(u"Binding process {process:s} to processing pathway.".format(process=process))
+            self.logger.debug(u"Binding process {process:s} to processing pathway.".format(process=process.func_name))
             if bind_id:
                 if bind_id in self.process.keys():
-                    self.logger.warning("Insertion is overwriting function at position %d..." % bind_id)
+                    self.logger.warning(u"Insertion is overwriting function at position %d..." % bind_id)
                 self.process[bind_id] = process
                 self.logger.debug(
-                    "Bound function {func_name:s} into the processing queue at position {func_position:d}."
+                    u"Bound function {func_name:s} into the processing queue at position {func_position:d}."
                         .format(func_name=process.func_name, func_position=bind_id))
             else:
                 if len(self.process.keys()) is 0:
-                    bind_id =1
+                    bind_id = 1
                 else:
                     bind_id = max(self.process.keys()) + 1
                 self.process[bind_id] = process
                 self.logger.debug(
-                    "Bound function {func_name:s} into the processing queue at position {func_position:d}."
-                    .format(func_name=process.func_name, func_position=bind_id))
+                    u"Bound function {func_name:s} into the processing queue at position {func_position:d}."
+                        .format(func_name=process.func_name, func_position=bind_id))
 
         else:
             for process in args:
@@ -203,9 +209,8 @@ class LiveProcess:
                     bind_id = max(self.process.keys()) + 1
                 self.process[bind_id] = process
                 self.logger.debug(
-                    "Bound function {func_name:s} into the processing queue at position {func_position:d}."
-                    .format(func_name=process.func_name, func_position=bind_id))
-
+                    u"Bound function {func_name:s} into the processing queue at position {func_position:d}."
+                        .format(func_name=process.func_name, func_position=bind_id))
 
     def start(self):
         return self.vs.start()
@@ -220,8 +225,34 @@ class LiveProcess:
         try:
             self.vs = WebcamVideoStream(src=self.source_device_id).start()
         except Exception as e:
-            self.logger.error("Failed to initialise capture device: %s" % e.message)
+            self.logger.error(u"Failed to initialise capture device: %s" % e.message)
             sys.exit(3)
+
+    def screenshot(self, frame, format="png"):
+        timestamp = datetime.datetime.now()
+        _frame = frame.copy()
+        h, w, c = _frame.shape
+        image_time_record = u"%s-%s-%s %s:%s:%s.%s" % (timestamp.year,
+                                                       timestamp.month,
+                                                       timestamp.day,
+                                                       timestamp.hour,
+                                                       timestamp.minute,
+                                                       timestamp.second,
+                                                       timestamp.microsecond)
+        filename = "screencap-%s-%s.%s" % (self.application_name,
+                                           image_time_record.replace(" ", "").replace(":", "-"),
+                                           format)
+
+        cv2.putText(img=_frame,
+                    text="%s    %s" % (self.application_name, image_time_record),
+                    org=(20, h - 50),
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                    fontScale=0.5,
+                    color=(64, 255, 64))
+        cv2.imwrite(filename, _frame)
+
+        self.logger.debug("Screencap recorded under %s." % os.path.join(os.getcwd(), filename))
+
 
     def loop(self):
         if not self.vs:
@@ -232,10 +263,10 @@ class LiveProcess:
         else:
             if self.warmup > 0:
                 self.logger.debug(
-                    "Beginning sensor warmup sequence of {warmup:.2f} second{s:s}.".
+                    u"Beginning sensor warmup sequence of {warmup:.2f} second{s:s}.".
                         format(warmup=self.warmup, s="" if self.warmup == 1.0 else "s"))
                 time.sleep(self.warmup)
-                self.logger.debug("Sensor warmup sequence finished. Beginning video feed-forward.")
+                self.logger.debug(u"Sensor warmup sequence finished. Beginning video feed-forward.")
 
             while self.vs:
                 self.frame = self.read()
@@ -250,17 +281,19 @@ class LiveProcess:
 
                 k = cv2.waitKey(30) & 0xFF
                 if k == 27:
-                    self.logger.debug("User close signal detected: closing application.")
-                    self.logger.debug("Closing video feed.")
+                    self.logger.debug(u"User close signal detected: closing application.")
+                    self.logger.debug(u"Closing video feed.")
                     self.stop()
-                    self.logger.debug("Video feed closed.")
-                    self.logger.debug("Closing windows.")
+                    self.logger.debug(u"Video feed closed.")
+                    self.logger.debug(u"Closing windows.")
                     cv2.destroyAllWindows()
-                    self.logger.debug("Windows closed. Terminating application.")
+                    self.logger.debug(u"Windows closed. Terminating application.")
                     break
+                elif self.screencap and k is ord('s'):
+                    self.screenshot(self.frame)
                 elif k is -1 or k is 255:
                     continue
                 else:
-                    logging.warning("User input %s not bound." % k)
+                    logging.warning(u"User input %s not bound." % k)
 
             sys.exit(0)

@@ -51,8 +51,8 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
 *.log
+screencap-*.*
 local_settings.py
 
 # Flask stuff:
