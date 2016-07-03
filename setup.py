@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='processpathway',
     version='0.3.11',
-    packages=['processpathway', 'processpathway.examples', 'processpathway.processpathway'],
+    packages=['processpathway'],
     url='https://www.github.com/chrisvoncsefalvay/processpathway',
     license='MIT',
     author='Chris von Csefalvay',
