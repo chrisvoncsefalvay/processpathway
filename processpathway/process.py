@@ -149,6 +149,27 @@ class LiveProcess:
             self.logger = logger
 
     def bind_process(self, *args, **kwargs):
+        """
+        Binds a process or multiple processes, in a particular order, to the processing pathway.
+
+        Currently, `bind_process` supports two usage methods:
+
+        1) Multiple processes: simply list the processes. Processes will be put into the process list in the given order
+        and executed in that order, respectively.
+
+            bind_process(process_1, process_2, process_3)
+
+        2) A single process with a sequential ID, which puts it at a set position.
+
+            bind_process(process_1, 3)
+
+        You can call bind_process as often as you wish, and every call adds the new processes to the specified position
+        or the highest position.
+
+        Note that where you specify a position, but already have an item there, you WILL get a warning but the item WILL
+        get overwritten, without asking you for consent. This is not so much a bug as a limitation inherent in the way
+        the system is set up to support live on-line tinkering with visual processes.
+        """
         if "bind_id" in kwargs:
             bind_id = kwargs["bind_id"]
             if kwargs.has_key("process"):
@@ -211,7 +232,8 @@ class LiveProcess:
         else:
             if self.warmup > 0:
                 self.logger.debug(
-                    "Beginning sensor warmup sequence of {warmup:.2f} second(s).".format(warmup=self.warmup))
+                    "Beginning sensor warmup sequence of {warmup:.2f} second{s:s}.".
+                        format(warmup=self.warmup, s="" if self.warmup == 1.0 else "s"))
                 time.sleep(self.warmup)
                 self.logger.debug("Sensor warmup sequence finished. Beginning video feed-forward.")
 
@@ -236,5 +258,9 @@ class LiveProcess:
                     cv2.destroyAllWindows()
                     self.logger.debug("Windows closed. Terminating application.")
                     break
+                elif k is -1 or k is 255:
+                    continue
+                else:
+                    logging.warning("User input %s not bound." % k)
 
             sys.exit(0)
