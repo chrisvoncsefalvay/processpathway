@@ -148,24 +148,43 @@ class LiveProcess:
             logger.addHandler(ch)
             self.logger = logger
 
-    def bind_process(self, process, bind_id=None):
-        self.logger.debug(u"Binding process {process:s} to processing pathway.".format(process=process))
-        if bind_id:
-            if bind_id in self.process.keys():
-                self.logger.warning("Insertion is overwriting function at position %d..." % bind_id)
-            self.process[bind_id] = process
-            self.logger.debug(
-                "Bound function {func_name:s} into the processing queue at position {func_position:d}."
-                    .format(func_name=process.func_name, func_position=bind_id))
-        else:
-            if len(self.process.keys()) is 0:
-                bind_id =1
+    def bind_process(self, *args, **kwargs):
+        if "bind_id" in kwargs:
+            bind_id = kwargs["bind_id"]
+            if kwargs.has_key("process"):
+                process = kwargs["process"]
             else:
-                bind_id = max(self.process.keys()) + 1
-            self.process[bind_id] = process
-            self.logger.debug(
-                "Bound function {func_name:s} into the processing queue at position {func_position:d}."
-                .format(func_name=process.func_name, func_position=bind_id))
+                process = args[0]
+
+            self.logger.debug(u"Binding process {process:s} to processing pathway.".format(process=process))
+            if bind_id:
+                if bind_id in self.process.keys():
+                    self.logger.warning("Insertion is overwriting function at position %d..." % bind_id)
+                self.process[bind_id] = process
+                self.logger.debug(
+                    "Bound function {func_name:s} into the processing queue at position {func_position:d}."
+                        .format(func_name=process.func_name, func_position=bind_id))
+            else:
+                if len(self.process.keys()) is 0:
+                    bind_id =1
+                else:
+                    bind_id = max(self.process.keys()) + 1
+                self.process[bind_id] = process
+                self.logger.debug(
+                    "Bound function {func_name:s} into the processing queue at position {func_position:d}."
+                    .format(func_name=process.func_name, func_position=bind_id))
+
+        else:
+            for process in args:
+                if len(self.process.keys()) is 0:
+                    bind_id = 1
+                else:
+                    bind_id = max(self.process.keys()) + 1
+                self.process[bind_id] = process
+                self.logger.debug(
+                    "Bound function {func_name:s} into the processing queue at position {func_position:d}."
+                    .format(func_name=process.func_name, func_position=bind_id))
+
 
     def start(self):
         return self.vs.start()

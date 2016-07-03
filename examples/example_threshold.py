@@ -24,7 +24,6 @@ def func3(_frame):
 
 if __name__ == '__main__':
     processor = LiveProcess(fps=True)
-    processor.bind_process(func1)
-    processor.bind_process(func2)
+    processor.bind_process(func1, func2)
     processor.initialise_capture_device(0)
     processor.loop()
