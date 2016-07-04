@@ -1,22 +1,26 @@
 ProcessPathway
 --------------
 
-ProcessPathway is a nifty little tool that lets you play with image processing algorithms instead of wiring up your test
+``ProcessPathway`` is a nifty little tool that lets you play with image processing algorithms instead of wiring up your test
 bench all day. It is designed to feed a video camera input (a webcam, usually) through any functions that can digest and
-return a numpy matrix (think OpenCV).
+return a ``numpy`` matrix aka ``ndarray`` object (think OpenCV).
 
 How to use
 ==========
 
-The `example_threshold.py` example, which - as the name suggests - thresholds the the webcam input, is a good example 
-for what a typical ProcessPathway pipeline would look like:
+The ``example_threshold.py`` example, which - as the name suggests - thresholds the the webcam input, is a good example of what a typical ``ProcessPathway`` pipeline would look like.
 
+First, import the ``LiveProcess`` object from ``processpathway``. You might want to also import whatever processing functions you need.
+
+..
     import cv2
     from processpathway import LiveProcess
 
-First, import the LiveProcess object from processpathway. You might want to also import whatever processing functions
-you need.
 
+Then, you write your functions. The only constraint is that they should take and emit a ``numpy.ndarray`` image. Of course, that does not mean you can't code whatever side effects you need them to generate!
+
+
+..
     def convert_to_grayscale(_frame):
         _frame = cv2.cvtColor(_frame, cv2.COLOR_BGR2GRAY)
         return _frame
@@ -30,9 +34,7 @@ you need.
         return _frame
 
 
-
-Write your functions. The only constraint is that they should take and emit a numpy.ndarray image. Of course, that does 
-not mean you can't code whatever side effects you need them to generate!
+Upon call, attach ``LiveProcess`` to a variable, then bind the processing functions to it, *in the order you want them to be performed*! Then, bind a capture device and initialise it. Finally, start the loop.
 
     if __name__ == '__main__':
         processor = LiveProcess(fps=True)
@@ -40,9 +42,8 @@ not mean you can't code whatever side effects you need them to generate!
         processor.initialise_capture_device(0)
         processor.loop()
 
+That's all, folks!
 
-Upon call, attach `LiveProcess` to a variable, then bind the processing functions to it, *in the order you want them to 
-be performed*! Then, bind a capture device and initialise it. Finally, start the loop.
 
 Built-in functionalities
 ========================
