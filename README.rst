@@ -10,12 +10,10 @@ How to use
 
 The ``example_threshold.py`` example, which - as the name suggests - thresholds the the webcam input, is a good example of what a typical ``ProcessPathway`` pipeline would look like.
 
-First, import the ``LiveProcess`` object from ``processpathway``. You might want to also import whatever processing functions you need.
+First, import the ``LiveProcess`` object from ``processpathway``. You might want to also import whatever processing functions you need.::
 
-```python
     import cv2
     from processpathway import LiveProcess
-```
 
 Then, you write your functions. The only constraint is that they should take and emit a ``numpy.ndarray`` image. Of course, that does not mean you can't code whatever side effects you need them to generate!
 
