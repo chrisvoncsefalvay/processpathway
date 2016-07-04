@@ -18,7 +18,6 @@ The model of processpathway is a four-step process:
 2) Give it a list of tasks to do, ordered neatly.
 3) Bind the tasks in.
 4) Run the loop and enjoy the show.
-
 """
 
 import collections

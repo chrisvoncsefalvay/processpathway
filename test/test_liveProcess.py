@@ -6,9 +6,13 @@
 """
 test_liveProcess is responsible for [brief description here].
 """
+from collections import OrderedDict
 from unittest import TestCase
-from processpathway import LiveProcess
+
 import cv2
+
+from processpathway import LiveProcess
+
 
 def imaging_process_identity(frame):
     return frame
@@ -21,34 +25,35 @@ def imaging_process_convert_to_grayscale(frame):
     return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 def imaging_process_reconvert_to_BGR(frame):
-     = cv2.cvtColor(, cv2.COLOR_)
+    return cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
 
-    def reconvert_to_bgr(_frame):
-        _frame = cv2.cvtColor(_frame, cv2.COLOR_GRAY2BGR)
-        return _frame
+
+def reconvert_to_bgr(frame):
+    _frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+    return frame
 
 
 class TestLiveProcess(TestCase):
     def setUp(self):
-        liveprocess = LiveProcess()
+        self.processor = LiveProcess(fps=True)
 
-    def test_bind_process(self):
-        self.fail()
+    def test_bind_single_process(self):
+        self.processor.bind_process(imaging_process_thresholding)
+        i = OrderedDict()
+        i[1] = imaging_process_thresholding
+        assert i == self.processor.process
 
-    def test_start(self):
-        self.fail()
+    def test_bind_multiple_processes(self):
+        self.processor.bind_process(imaging_process_identity, imaging_process_convert_to_grayscale)
+        i = OrderedDict()
+        i[1] = imaging_process_identity
+        i[2] = imaging_process_convert_to_grayscale
+        assert i == self.processor.process
 
-    def test_stop(self):
-        self.fail()
-
-    def test_read(self):
-        self.fail()
-
-    def test_initialise_capture_device(self):
-        self.fail()
-
-    def test_screenshot(self):
-        self.fail()
-
-    def test_loop(self):
-        self.fail()
+    def test_bind_ordered_processes(self):
+        self.processor.bind_process(imaging_process_identity, bind_id=2)
+        self.processor.bind_process(imaging_process_thresholding, bind_id=1)
+        i = OrderedDict()
+        i[2] = imaging_process_identity
+        i[1] = imaging_process_thresholding
+        assert i == self.processor.process
