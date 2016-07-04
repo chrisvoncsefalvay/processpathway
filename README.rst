@@ -12,9 +12,10 @@ The ``example_threshold.py`` example, which - as the name suggests - thresholds 
 
 First, import the ``LiveProcess`` object from ``processpathway``. You might want to also import whatever processing functions you need.
 
-..
+``
     import cv2
     from processpathway import LiveProcess
+``
 
 
 Then, you write your functions. The only constraint is that they should take and emit a ``numpy.ndarray`` image. Of course, that does not mean you can't code whatever side effects you need them to generate!
