@@ -56,5 +56,7 @@ constructor
 Todos
 =====
 
-* Tests!
-* Documentation!
+* Tests! We desperately need some tests.
+* Documentation! Might be autogeneratable as most of the functions are fairly extensively documented.
+* More examples! No better way to demonstrate the benefits of Processpathway.
+* I am not entirely happy with some functionalities yet. Among others, eventually I'd like the ability to inject observer blocks the way functions are injected, so that users would be able to have multiple output windows from the pipeline.
