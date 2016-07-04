@@ -11,14 +11,12 @@ How to use
 The `example_threshold.py` example, which - as the name suggests - thresholds the the webcam input, is a good example 
 for what a typical ProcessPathway pipeline would look like:
 
-::
     import cv2
     from processpathway import LiveProcess
 
 First, import the LiveProcess object from processpathway. You might want to also import whatever processing functions
 you need.
 
-::
     def convert_to_grayscale(_frame):
         _frame = cv2.cvtColor(_frame, cv2.COLOR_BGR2GRAY)
         return _frame
@@ -36,7 +34,6 @@ you need.
 Write your functions. The only constraint is that they should take and emit a numpy.ndarray image. Of course, that does 
 not mean you can't code whatever side effects you need them to generate!
 
-::
     if __name__ == '__main__':
         processor = LiveProcess(fps=True)
         processor.bind_process(convert_to_grayscale, threshold, reconvert_to_bgr)
