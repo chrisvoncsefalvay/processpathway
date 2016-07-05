@@ -49,10 +49,10 @@ That's all, folks!
 Built-in functionalities
 ========================
 
-* FPS calculation (use `fps=True` when constructing your `LiveProcess` instance)
-* Screenshotting (bound to the `s` key, on by default but can be disabled using `screencap=False` in the `LiveProcess`
+* FPS calculation (use ``fps=True`` when constructing your ``LiveProcess`` instance)
+* Screenshotting (bound to the ``s`` key, on by default but can be disabled using ``screencap=False`` in the ``LiveProcess``
 constructor
-* Automatic clean-up and closedown (using the `esc` key by default)
+* Automatic clean-up and closedown (using the ``esc`` key by default)
 * And lots more...
 
 Todos
