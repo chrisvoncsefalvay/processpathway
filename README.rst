@@ -1,7 +1,7 @@
 ProcessPathway
 --------------
 
-.. image::https://raw.githubusercontent.com/chrisvoncsefalvay/processpathway/master/processpathway.png
+.. image:: https://raw.githubusercontent.com/chrisvoncsefalvay/processpathway/master/processpathway.png
 
 ``ProcessPathway`` is a nifty little tool that lets you play with image processing algorithms instead of wiring up your test
 bench all day. It is designed to feed a video camera input (a webcam, usually) through any functions that can digest and
